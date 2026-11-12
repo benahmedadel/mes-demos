@@ -1,0 +1,1858 @@
+/* ===========================================================================
+   Assistant Arcantel — design system
+   ---------------------------------------------------------------------------
+   Base : la charte d'arcantel.ch (cyan #00a1c6, anthracite #222, Dosis, les
+   quatre carres du logo). Ecriture : celle d'un produit IA d'aujourd'hui —
+   un ecran d'accueil immersif, un composeur central, des cartes en verre
+   depoli sur une mosaique de pixels animee, puis un fil de discussion avec
+   son panneau de contexte.
+
+   Deux cyans cohabitent : --ac-accent (#00a1c6) est la teinte publiee, bonne
+   en aplat decoratif mais a 3.0:1 sur blanc ; --ac-accent-ink (#00748f) est
+   sa version lisible (5.4:1), utilisee des que la couleur porte du texte. Les
+   boutons pleins passent par --ac-btn-bg / --ac-btn-ink pour que le theme
+   sombre puisse inverser (cyan clair, texte sombre) sans toucher au reste.
+   =========================================================================== */
+
+:root {
+  color-scheme: light;
+
+  --ac-accent: #00a1c6;
+  --ac-accent-ink: #0081a1;
+  --ac-accent-dk: #008db0;
+  --ac-accent-lt: #a8dced;
+  --ac-accent-wash: rgba(0, 161, 198, 0.09);
+  --ac-accent-ring: rgba(0, 161, 198, 0.26);
+
+  --ac-grey-square: #9e9f9e;
+  --ac-dark-square: #1a1919;
+
+  --ac-btn-bg: #00a1c6;
+  --ac-btn-ink: #ffffff;
+
+  --ac-ground: #f6f7f8;
+  --ac-surface: #ffffff;
+  --ac-surface-2: #f1f3f4;
+  --ac-glass: rgba(255, 255, 255, 0.74);
+  --ac-line: #e4e7e9;
+  --ac-line-strong: #cfd4d8;
+
+  --ac-ink: #1f2426;
+  --ac-ink-2: #4b5357;
+  /* 5.2:1 sur blanc : un gris qui se lit, pas un gris qui se devine. */
+  --ac-muted: #66717a;
+
+  --ac-bar: #222222;
+  --ac-bar-ink: #cccccc;
+
+  --ac-ok: #2f9e5b;
+  --ac-warn: #c98a1c;
+  --ac-ko: #c8452f;
+
+  --ac-radius-lg: 18px;
+  --ac-radius: 12px;
+  --ac-radius-sm: 8px;
+
+  --ac-shadow: 0 1px 2px rgba(20, 30, 34, 0.05), 0 12px 32px -14px rgba(20, 30, 34, 0.2);
+  --ac-shadow-lg: 0 2px 4px rgba(20, 30, 34, 0.06), 0 26px 60px -18px rgba(20, 30, 34, 0.3);
+
+  --ac-top-height: 76px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(900px 460px at 50% -140px, var(--ac-accent-wash), transparent 70%),
+    var(--ac-ground);
+  color: var(--ac-ink);
+  font-family: var(--font-dosis), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 17px;
+  line-height: 1.45;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: rgba(0, 161, 198, 0.22);
+}
+
+button,
+textarea {
+  font-family: inherit;
+}
+
+/* ---------- Ascenseurs ---------- */
+
+/* Fins, sans piste, invisibles au repos : la pastille n'apparait qu'au survol
+   de la zone qui defile. Les proprietes standard servent Chrome, Edge et
+   Firefox ; les pseudo-elements WebKit restent pour Safari. */
+.ac-thread,
+.ac-composer textarea {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 200ms ease;
+}
+
+.ac-thread:hover,
+.ac-composer textarea:hover,
+.ac-composer textarea:focus {
+  scrollbar-color: var(--ac-line-strong) transparent;
+}
+
+.ac-thread::-webkit-scrollbar,
+.ac-composer textarea::-webkit-scrollbar {
+  width: 6px;
+}
+
+.ac-thread::-webkit-scrollbar-track,
+.ac-composer textarea::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ac-thread::-webkit-scrollbar-thumb,
+.ac-composer textarea::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 999px;
+}
+
+.ac-thread:hover::-webkit-scrollbar-thumb,
+.ac-composer textarea:hover::-webkit-scrollbar-thumb,
+.ac-composer textarea:focus::-webkit-scrollbar-thumb {
+  background: var(--ac-line-strong);
+}
+
+/* ---------- Page de connexion ---------- */
+
+.ac-login {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+.ac-login-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--ac-top-height);
+  padding: 0 28px;
+}
+
+.ac-login-top img {
+  height: 48px;
+  width: auto;
+}
+
+/* Le selecteur de langue hors de l'onglet cyan : fond clair, bordure. La
+   double classe l'emporte sur les regles de l'onglet, declarees plus bas. */
+.ac-lang.ac-lang--dark {
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+}
+
+.ac-lang.ac-lang--dark button {
+  color: var(--ac-ink-2);
+}
+
+.ac-lang.ac-lang--dark button:hover {
+  color: var(--ac-ink);
+}
+
+.ac-lang.ac-lang--dark button.is-active {
+  background: var(--ac-accent);
+  color: #ffffff;
+}
+
+.ac-login-main {
+  flex: 1;
+  display: grid;
+  place-items: center;
+  padding: 24px 16px 48px;
+}
+
+.ac-login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 32px 30px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-top: 4px solid var(--ac-accent);
+  border-radius: var(--ac-radius-lg);
+  box-shadow: var(--ac-shadow-lg);
+  animation: ac-rise 420ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ac-login-card h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--ac-ink);
+}
+
+.ac-login-lead {
+  margin: 10px 0 24px;
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--ac-ink-2);
+}
+
+.ac-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.ac-field span {
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ac-ink-2);
+}
+
+.ac-field input {
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--ac-line-strong);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+  color: var(--ac-ink);
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+  font-size: 1.02rem;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.ac-field input:focus {
+  outline: none;
+  border-color: var(--ac-accent);
+  box-shadow: 0 0 0 4px var(--ac-accent-ring);
+}
+
+.ac-login-error {
+  margin: -4px 0 16px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--ac-ko);
+  background: rgba(200, 69, 47, 0.07);
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+  font-size: 0.92rem;
+  color: var(--ac-ink);
+}
+
+.ac-login-submit {
+  width: 100%;
+  height: 48px;
+  border: 0;
+  border-radius: var(--ac-radius);
+  background: var(--ac-btn-bg);
+  color: var(--ac-btn-ink);
+  font-size: 0.86rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background 150ms ease, transform 150ms ease;
+}
+
+.ac-login-submit:hover:not(:disabled) {
+  background: var(--ac-accent-dk);
+  transform: translateY(-1px);
+}
+
+.ac-login-submit:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* ---------- Fond anime ---------- */
+
+.ac-pixels {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.ac-app {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---------- Le motif du logo : gris, cyan, vide, noir ---------- */
+
+.ac-mark {
+  display: grid;
+  grid-template-columns: repeat(2, 9px);
+  grid-template-rows: repeat(2, 9px);
+  gap: 2px;
+  flex: none;
+}
+
+.ac-mark i {
+  display: block;
+}
+
+.ac-mark i:nth-child(1) {
+  background: var(--ac-grey-square);
+}
+
+.ac-mark i:nth-child(2) {
+  background: var(--ac-accent);
+}
+
+.ac-mark i:nth-child(3) {
+  background: transparent;
+}
+
+.ac-mark i:nth-child(4) {
+  background: var(--ac-dark-square);
+}
+
+/* ---------- Barre haute ---------- */
+
+/* L'en-tete d'arcantel.ch : logo a gauche, menu en capitales a droite, et un
+   onglet cyan suspendu au bord superieur (chez eux, les reseaux sociaux). */
+.ac-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 32px;
+  height: var(--ac-top-height);
+  padding: 0 24px 0 28px;
+  background: var(--ac-glass);
+  backdrop-filter: blur(18px) saturate(1.3);
+  -webkit-backdrop-filter: blur(18px) saturate(1.3);
+  border-bottom: 1px solid var(--ac-line);
+}
+
+.ac-brand {
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+}
+
+.ac-brand img {
+  height: 48px;
+  width: auto;
+}
+
+.ac-nav {
+  display: flex;
+  justify-content: flex-end;
+  gap: 28px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ac-nav a,
+.ac-nav .is-current {
+  padding: 6px 0;
+  border-bottom: 1px solid transparent;
+  color: var(--ac-ink-2);
+  text-decoration: none;
+  transition: color 160ms ease, border-color 160ms ease;
+}
+
+.ac-nav a:hover {
+  color: var(--ac-ink);
+  border-bottom-color: var(--ac-accent);
+}
+
+.ac-nav .is-current {
+  color: var(--ac-accent-ink);
+  border-bottom-color: var(--ac-accent);
+}
+
+.ac-topcap {
+  /* Toujours dans la troisieme colonne, meme quand le menu est masque et ne
+     cree plus de boite : sinon l'onglet glisse dans la colonne extensible. */
+  grid-column: 3;
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  align-self: start;
+  height: 54px;
+  padding: 0 8px 0 14px;
+  border-radius: 0 0 10px 10px;
+  background: var(--ac-accent);
+  color: #ffffff;
+  box-shadow: 0 10px 26px -12px rgba(0, 161, 198, 0.7);
+}
+
+.ac-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-right: 8px;
+  padding-right: 14px;
+  border-right: 1px solid rgba(255, 255, 255, 0.28);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.92);
+  white-space: nowrap;
+}
+
+.ac-status i {
+  width: 8px;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.ac-status--init i {
+  animation: ac-pulse 1.2s ease-in-out infinite;
+}
+
+.ac-status--online i {
+  background: #ffffff;
+}
+
+.ac-status--busy i {
+  background: #ffffff;
+  animation: ac-pulse 0.9s ease-in-out infinite;
+}
+
+.ac-status--offline i {
+  background: #ffb4a8;
+}
+
+/* Les quatre langues, en segments dans l'onglet cyan : la courante est pleine. */
+.ac-lang {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.ac-lang button {
+  height: 30px;
+  padding: 0 9px;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: inherit;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  cursor: pointer;
+  transition: background 150ms ease, color 150ms ease;
+}
+
+.ac-lang button:hover {
+  color: #ffffff;
+}
+
+.ac-lang button.is-active {
+  background: #ffffff;
+  color: var(--ac-accent-ink);
+}
+
+.ac-lang button:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 1px;
+}
+
+.ac-cap-btn {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+  cursor: pointer;
+  transition: background 150ms ease, opacity 150ms ease;
+}
+
+.ac-cap-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ac-cap-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.28);
+}
+
+.ac-cap-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.ac-cap-btn:focus-visible {
+  outline: 2px solid #ffffff;
+  outline-offset: 2px;
+}
+
+/* ---------- Boutons ---------- */
+
+.ac-btn-ghost {
+  height: 36px;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-sm);
+  background: var(--ac-surface);
+  color: var(--ac-ink-2);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background 160ms ease;
+}
+
+.ac-btn-ghost {
+  padding: 0 14px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.ac-btn-ghost:hover {
+  border-color: var(--ac-accent);
+  color: var(--ac-accent-ink);
+}
+
+.ac-btn-ghost:focus-visible,
+.ac-send:focus-visible,
+.ac-suggestion:focus-visible,
+.ac-tag:focus-visible,
+.ac-action:focus-visible,
+.ac-scroll-btn:focus-visible,
+.ac-source-card:focus-visible,
+.ac-source-chips a:focus-visible {
+  outline: 2px solid var(--ac-accent-ink);
+  outline-offset: 2px;
+}
+
+/* ---------- Scene ---------- */
+
+.ac-stage {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 28px;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 28px;
+}
+
+/* La colonne prend toute la hauteur dans les deux etats : la zone centrale
+   defile, le composeur reste en bas. Passer de l'accueil a la conversation ne
+   deplace donc que le contenu de la zone centrale. */
+.ac-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: calc(100dvh - var(--ac-top-height));
+}
+
+/* ---------- Accueil ---------- */
+
+/* Centre vertical par marges automatiques, pas par justify-content : quand le
+   contenu depasse la hauteur (petit ecran), justify-content:center fait
+   deborder par le haut et rend l'accroche inatteignable au defilement. */
+.ac-thread {
+  display: flex;
+  flex-direction: column;
+}
+
+.ac-app[data-mode="empty"] .ac-thread-inner {
+  margin: auto;
+  padding-bottom: 12px;
+}
+
+.ac-hero {
+  margin-bottom: 30px;
+  text-align: center;
+  animation: ac-rise 520ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ac-kicker {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin: 0 0 20px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ac-accent-ink);
+}
+
+.ac-hero h1 {
+  margin: 0;
+  font-size: clamp(2.1rem, 4.6vw, 3.4rem);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  color: var(--ac-ink);
+}
+
+.ac-hero h1 strong {
+  font-weight: 700;
+  background: linear-gradient(90deg, var(--ac-accent-ink), var(--ac-accent));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.ac-lead {
+  max-width: 62ch;
+  margin: 18px auto 0;
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--ac-ink-2);
+}
+
+/* ---------- Composeur ---------- */
+
+.ac-composer-zone {
+  position: relative;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 8px 0 20px;
+}
+
+.ac-composer {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding: 10px 10px 10px 20px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-lg);
+  box-shadow: var(--ac-shadow-lg);
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.ac-composer:focus-within {
+  border-color: var(--ac-accent);
+  box-shadow: 0 0 0 4px var(--ac-accent-ring), var(--ac-shadow-lg);
+}
+
+.ac-composer.is-busy {
+  border-color: var(--ac-accent-ring);
+}
+
+.ac-composer textarea {
+  flex: 1;
+  min-width: 0;
+  max-height: 180px;
+  padding: 10px 0;
+  border: 0;
+  outline: 0;
+  resize: none;
+  overflow-y: hidden;
+  background: transparent;
+  color: var(--ac-ink);
+  font-size: 1.05rem;
+  line-height: 1.5;
+}
+
+.ac-composer textarea::placeholder {
+  color: var(--ac-muted);
+}
+
+.ac-send {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: var(--ac-radius);
+  background: var(--ac-btn-bg);
+  color: var(--ac-btn-ink);
+  cursor: pointer;
+  transition: transform 150ms ease, background 150ms ease, opacity 150ms ease;
+}
+
+.ac-send svg {
+  width: 20px;
+  height: 20px;
+}
+
+.ac-send:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: var(--ac-accent-dk);
+}
+
+.ac-send:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* Sous le composeur, la ou l'on regarde quand l'echange est fini : le bouton
+   qui repart de zero, libelle en toutes lettres. */
+.ac-composer-tools {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 10px;
+  padding: 0 4px;
+}
+
+.ac-new-chat {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 16px 0 12px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-surface);
+  color: var(--ac-accent-ink);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: border-color 150ms ease, background 150ms ease;
+}
+
+.ac-new-chat svg {
+  width: 15px;
+  height: 15px;
+}
+
+.ac-new-chat:hover:not(:disabled) {
+  border-color: var(--ac-accent);
+  background: var(--ac-accent-wash);
+}
+
+.ac-new-chat:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ac-new-chat:focus-visible {
+  outline: 2px solid var(--ac-accent-ink);
+  outline-offset: 2px;
+}
+
+/* Menu d'export : un <details> natif, qui s'ouvre vers le haut puisqu'il vit
+   au pied de la page. */
+.ac-export {
+  position: relative;
+}
+
+.ac-export summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 36px;
+  padding: 0 14px 0 12px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-surface);
+  color: var(--ac-ink-2);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  list-style: none;
+  cursor: pointer;
+  user-select: none;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.ac-export summary::-webkit-details-marker {
+  display: none;
+}
+
+.ac-export summary svg {
+  width: 15px;
+  height: 15px;
+}
+
+.ac-export summary:hover,
+.ac-export[open] summary {
+  border-color: var(--ac-accent);
+  color: var(--ac-accent-ink);
+}
+
+.ac-export summary:focus-visible {
+  outline: 2px solid var(--ac-accent-ink);
+  outline-offset: 2px;
+}
+
+.ac-export-menu {
+  position: absolute;
+  right: 0;
+  bottom: calc(100% + 8px);
+  z-index: 30;
+  min-width: 280px;
+  margin: 0;
+  padding: 6px;
+  list-style: none;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius);
+  box-shadow: var(--ac-shadow-lg);
+  animation: ac-rise 160ms ease both;
+}
+
+.ac-export-menu button {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+  padding: 9px 12px;
+  border: 0;
+  border-radius: var(--ac-radius-sm);
+  background: transparent;
+  color: var(--ac-ink);
+  text-align: left;
+  cursor: pointer;
+  transition: background 120ms ease;
+}
+
+.ac-export-menu button:hover:not(:disabled),
+.ac-export-menu button:focus-visible {
+  background: var(--ac-accent-wash);
+  outline: none;
+}
+
+.ac-export-menu button:disabled {
+  opacity: 0.5;
+  cursor: progress;
+}
+
+.ac-export-label {
+  font-size: 0.92rem;
+  font-weight: 700;
+}
+
+.ac-export-hint {
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+  font-size: 0.78rem;
+  color: var(--ac-muted);
+}
+
+/* ---------- Suggestions ---------- */
+
+.ac-suggestions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  animation: ac-rise 600ms 120ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.ac-suggestion {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 18px 17px;
+  overflow: hidden;
+  text-align: left;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius);
+  box-shadow: var(--ac-shadow);
+  color: var(--ac-ink);
+  cursor: pointer;
+  transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.ac-suggestion::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--ac-accent);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 220ms ease;
+}
+
+.ac-suggestion:hover:not(:disabled) {
+  transform: translateY(-2px);
+  border-color: var(--ac-accent);
+  box-shadow: var(--ac-shadow-lg);
+}
+
+.ac-suggestion:hover:not(:disabled)::before {
+  transform: scaleY(1);
+}
+
+.ac-suggestion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ac-suggestion-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ac-accent-ink);
+}
+
+.ac-suggestion-hint {
+  font-size: 0.86rem;
+  color: var(--ac-muted);
+}
+
+.ac-suggestion-prompt {
+  margin-top: 4px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--ac-ink);
+}
+
+/* ---------- Fil de discussion ---------- */
+
+.ac-thread {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 28px 4px 12px;
+  scroll-behavior: smooth;
+}
+
+.ac-thread-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  width: 100%;
+  max-width: 820px;
+  margin: 0 auto;
+}
+
+.ac-msg {
+  display: flex;
+  gap: 14px;
+  animation: ac-rise 260ms ease both;
+}
+
+.ac-msg--user {
+  justify-content: flex-end;
+}
+
+.ac-msg-avatar {
+  align-self: flex-start;
+  margin-top: 6px;
+  padding: 6px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-sm);
+  box-shadow: var(--ac-shadow);
+}
+
+.ac-msg-body {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+  max-width: 100%;
+}
+
+.ac-msg--user .ac-msg-body {
+  align-items: flex-end;
+  max-width: 78%;
+}
+
+.ac-msg-who {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ac-muted);
+}
+
+/* Le texte des echanges est en typo de lecture, pas en Dosis : une humaniste
+   large, un corps un peu plus grand, un interligne genereux et une mesure
+   bornee a ~68 caracteres. C'est ce qui rend une reponse longue reposante. */
+.ac-msg-bubble {
+  padding: 18px 22px;
+  border-radius: var(--ac-radius-lg);
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+  font-size: 1.06rem;
+  line-height: 1.7;
+  letter-spacing: 0.002em;
+}
+
+.ac-msg--assistant .ac-msg-bubble {
+  max-width: 68ch;
+}
+
+.ac-msg--assistant .ac-msg-bubble {
+  border: 1px solid var(--ac-line);
+  border-top-left-radius: 6px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow);
+  color: var(--ac-ink);
+}
+
+.ac-msg--user .ac-msg-bubble {
+  border-top-right-radius: 6px;
+  background: var(--ac-btn-bg);
+  color: var(--ac-btn-ink);
+  font-weight: 500;
+}
+
+.ac-msg--summary .ac-msg-bubble {
+  border-style: dashed;
+  background: transparent;
+  box-shadow: none;
+  color: var(--ac-muted);
+  font-size: 0.9rem;
+}
+
+/* ---------- Meta d'une reponse : fiabilite, sources, actions ---------- */
+
+.ac-msg-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 14px;
+  padding-left: 4px;
+}
+
+.ac-confidence {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ac-muted);
+}
+
+.ac-confidence-squares {
+  display: inline-flex;
+  gap: 3px;
+}
+
+.ac-confidence-squares i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--ac-line-strong);
+}
+
+.ac-confidence--high {
+  color: var(--ac-accent-ink);
+}
+
+.ac-confidence--high i.on {
+  background: var(--ac-accent);
+}
+
+.ac-confidence--medium {
+  color: var(--ac-warn);
+}
+
+.ac-confidence--medium i.on {
+  background: var(--ac-warn);
+}
+
+.ac-confidence--low {
+  color: var(--ac-ko);
+}
+
+.ac-confidence--low i.on {
+  background: var(--ac-ko);
+}
+
+.ac-source-index {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  width: 20px;
+  height: 20px;
+  border-radius: 5px;
+  background: var(--ac-accent-wash);
+  color: var(--ac-accent-ink);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.ac-source-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ac-source-chips a {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  max-width: 280px;
+  padding: 4px 11px 4px 4px;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-surface);
+  font-size: 0.8rem;
+  color: var(--ac-ink-2);
+  text-decoration: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.ac-source-chips a:hover {
+  border-color: var(--ac-accent);
+  color: var(--ac-accent-ink);
+}
+
+.ac-msg-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.ac-action {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-sm);
+  background: var(--ac-surface);
+  color: var(--ac-muted);
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+
+.ac-action svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ac-action:hover {
+  border-color: var(--ac-accent);
+  color: var(--ac-accent-ink);
+}
+
+.ac-action.is-copied,
+.ac-action.is-liked {
+  border-color: var(--ac-ok);
+  color: var(--ac-ok);
+}
+
+.ac-action.is-disliked {
+  border-color: var(--ac-ko);
+  color: var(--ac-ko);
+}
+
+/* ---------- Extraits cites ---------- */
+
+.ac-citations {
+  margin-top: 14px;
+  padding-top: 12px;
+  border-top: 1px solid var(--ac-line);
+}
+
+.ac-citations summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  list-style: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ac-muted);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.ac-citations summary::-webkit-details-marker {
+  display: none;
+}
+
+.ac-citations summary::before {
+  content: "";
+  width: 0;
+  height: 0;
+  border-left: 4px solid currentColor;
+  border-top: 3.5px solid transparent;
+  border-bottom: 3.5px solid transparent;
+  transition: transform 180ms ease;
+}
+
+.ac-citations[open] summary::before {
+  transform: rotate(90deg);
+}
+
+.ac-citations summary:hover {
+  color: var(--ac-accent-ink);
+}
+
+.ac-citations ul {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ac-citations li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ac-ink-2);
+}
+
+.ac-citations q {
+  quotes: "« " " »";
+  font-style: italic;
+}
+
+/* ---------- Recherche en cours ---------- */
+
+.ac-thinking {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 18px;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-lg);
+  border-top-left-radius: 6px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow);
+  font-size: 0.92rem;
+  color: var(--ac-muted);
+}
+
+.ac-thinking-squares {
+  display: grid;
+  grid-template-columns: repeat(2, 8px);
+  gap: 2px;
+}
+
+.ac-thinking-squares i {
+  width: 8px;
+  height: 8px;
+  background: var(--ac-accent);
+  animation: ac-blink 1.2s ease-in-out infinite;
+}
+
+.ac-thinking-squares i:nth-child(1) {
+  background: var(--ac-grey-square);
+}
+
+.ac-thinking-squares i:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.ac-thinking-squares i:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+.ac-thinking-squares i:nth-child(4) {
+  background: var(--ac-dark-square);
+  animation-delay: 0.45s;
+}
+
+/* ---------- Erreur ---------- */
+
+.ac-error {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 12px;
+  padding: 14px 18px;
+  border: 1px solid rgba(200, 69, 47, 0.3);
+  border-left: 3px solid var(--ac-ko);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+  font-size: 0.92rem;
+  color: var(--ac-ink-2);
+}
+
+.ac-error strong {
+  display: block;
+  color: var(--ac-ink);
+}
+
+.ac-error p {
+  margin: 4px 0 0;
+}
+
+/* ---------- Retour en bas ---------- */
+
+.ac-scroll-btn {
+  position: absolute;
+  top: -52px;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border: 1px solid var(--ac-line);
+  border-radius: 999px;
+  background: var(--ac-surface);
+  box-shadow: var(--ac-shadow-lg);
+  color: var(--ac-ink-2);
+  cursor: pointer;
+  transform: translateX(-50%);
+  transition: color 150ms ease, border-color 150ms ease;
+}
+
+.ac-scroll-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ac-scroll-btn:hover {
+  border-color: var(--ac-accent);
+  color: var(--ac-accent-ink);
+}
+
+/* ---------- Panneau lateral ---------- */
+
+.ac-panel {
+  display: none;
+}
+
+/* Le panneau se lit en typo de lecture, a des corps normaux : un panneau
+   lateral n'est pas une legende, personne ne doit plisser les yeux dessus. */
+.ac-panel {
+  font-family: var(--font-reading), "Segoe UI", system-ui, sans-serif;
+}
+
+.ac-card {
+  padding: 16px 18px 18px;
+  background: var(--ac-surface);
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-lg);
+  box-shadow: var(--ac-shadow);
+}
+
+.ac-card-title {
+  margin: 0 0 14px;
+  font-family: var(--font-dosis), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ac-ink-2);
+}
+
+.ac-card-empty {
+  margin: 0;
+  font-size: 0.98rem;
+  line-height: 1.6;
+  color: var(--ac-ink-2);
+}
+
+/* La carte de contact : un filet cyan, pas un aplat anthracite qui tranche
+   sur une interface claire. */
+.ac-card--contact {
+  border-left: 3px solid var(--ac-accent);
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ac-ink-2);
+}
+
+.ac-card--contact p {
+  margin: 0 0 6px;
+}
+
+.ac-card--contact a {
+  color: var(--ac-accent-ink);
+  text-decoration: none;
+}
+
+.ac-card--contact a:hover {
+  text-decoration: underline;
+}
+
+.ac-card-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  font-family: var(--font-dosis), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.ac-card-link svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ac-source-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Titre et chemin, rien d'autre : le panneau situe la page, le fil la cite. */
+.ac-source-card {
+  display: flex;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius);
+  background: var(--ac-surface);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.ac-source-card:hover {
+  border-color: var(--ac-accent);
+  transform: translateY(-1px);
+}
+
+.ac-source-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.ac-source-title {
+  font-size: 0.96rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--ac-ink);
+}
+
+.ac-source-path {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.8rem;
+  color: var(--ac-accent-ink);
+}
+
+.ac-source-path svg {
+  width: 13px;
+  height: 13px;
+}
+
+/* Les douze domaines en texte qui coule, un carre cyan devant chacun (le motif
+   du logo) : cinq lignes au lieu de douze pastilles. */
+.ac-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px 16px;
+}
+
+.ac-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 3px 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.95rem;
+  line-height: 1.3;
+  text-align: left;
+  color: var(--ac-ink-2);
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.ac-tag::before {
+  content: "";
+  flex: none;
+  width: 7px;
+  height: 7px;
+  background: var(--ac-accent);
+  transition: transform 150ms ease;
+}
+
+.ac-tag:hover:not(:disabled) {
+  color: var(--ac-accent-ink);
+}
+
+.ac-tag:hover:not(:disabled)::before {
+  transform: scale(1.3);
+}
+
+.ac-tag:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ---------- Markdown ---------- */
+
+/* Un rythme vertical unique : chaque bloc (paragraphe, liste, titre) est
+   separe du precedent d'une marge en em, donc proportionnelle au corps. */
+.ac-markdown > * {
+  margin: 0;
+}
+
+.ac-markdown > * + * {
+  margin-top: 0.85em;
+}
+
+.ac-markdown h1,
+.ac-markdown h2,
+.ac-markdown h3,
+.ac-markdown h4,
+.ac-markdown h5,
+.ac-markdown h6 {
+  font-family: var(--font-dosis), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 1.08rem;
+  font-weight: 700;
+  line-height: 1.3;
+  letter-spacing: 0.02em;
+  color: var(--ac-ink);
+}
+
+.ac-markdown > * + h1,
+.ac-markdown > * + h2,
+.ac-markdown > * + h3,
+.ac-markdown > * + h4,
+.ac-markdown > * + h5,
+.ac-markdown > * + h6 {
+  margin-top: 1.3em;
+}
+
+.ac-markdown h1 + *,
+.ac-markdown h2 + *,
+.ac-markdown h3 + *,
+.ac-markdown h4 + *,
+.ac-markdown h5 + *,
+.ac-markdown h6 + * {
+  margin-top: 0.45em;
+}
+
+.ac-msg--user .ac-markdown h1,
+.ac-msg--user .ac-markdown h2,
+.ac-msg--user .ac-markdown h3,
+.ac-msg--user .ac-markdown h4,
+.ac-msg--user .ac-markdown h5,
+.ac-msg--user .ac-markdown h6 {
+  color: inherit;
+}
+
+.ac-markdown ol,
+.ac-markdown ul {
+  padding-left: 1.5em;
+}
+
+.ac-markdown ul {
+  list-style: square;
+}
+
+.ac-markdown li {
+  padding-left: 0.2em;
+}
+
+.ac-markdown li + li {
+  margin-top: 0.45em;
+}
+
+.ac-markdown li::marker {
+  color: var(--ac-accent);
+  font-weight: 700;
+}
+
+.ac-msg--user .ac-markdown li::marker {
+  color: inherit;
+}
+
+.ac-markdown a {
+  color: var(--ac-accent-ink);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.ac-msg--user .ac-markdown a {
+  color: inherit;
+}
+
+.ac-markdown code {
+  padding: 1px 6px;
+  border: 1px solid var(--ac-line);
+  border-radius: 4px;
+  background: var(--ac-surface-2);
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-size: 0.88em;
+}
+
+/* Semi-gras, pas gras : le mot cle ressort sans trouer la ligne. */
+.ac-markdown strong {
+  font-weight: 600;
+  color: var(--ac-ink);
+}
+
+.ac-msg--user .ac-markdown strong {
+  color: inherit;
+}
+
+.ac-markdown-figure {
+  margin: 0;
+}
+
+.ac-markdown-figure img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--ac-line);
+  border-radius: var(--ac-radius-sm);
+}
+
+.ac-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+/* ---------- Animations ---------- */
+
+@keyframes ac-rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ac-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+@keyframes ac-blink {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ac-hero,
+  .ac-suggestions,
+  .ac-msg,
+  .ac-status i,
+  .ac-thinking-squares i {
+    animation: none;
+  }
+
+  .ac-thread {
+    scroll-behavior: auto;
+  }
+
+  .ac-suggestion,
+  .ac-send,
+  .ac-source-card {
+    transition: none;
+  }
+}
+
+/* ---------- Theme sombre ---------- */
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Le cyan publie tient 5.8:1 sur l'anthracite : il reste la teinte des
+     aplats ; le texte prend une nuance a peine plus claire pour les petites
+     tailles. */
+  --ac-accent: #00a1c6;
+  --ac-accent-ink: #2ab6d9;
+  --ac-accent-dk: #19aed3;
+  --ac-accent-lt: #a8dced;
+  --ac-accent-wash: rgba(0, 161, 198, 0.14);
+  --ac-accent-ring: rgba(0, 161, 198, 0.32);
+
+  --ac-dark-square: #e9edef;
+
+  --ac-btn-bg: #00a1c6;
+  --ac-btn-ink: #ffffff;
+
+  --ac-ground: #0e1316;
+  --ac-surface: #151b1f;
+  --ac-surface-2: #1b2328;
+  --ac-glass: rgba(14, 19, 22, 0.72);
+  --ac-line: rgba(255, 255, 255, 0.08);
+  --ac-line-strong: rgba(255, 255, 255, 0.16);
+
+  --ac-ink: #e9edef;
+  --ac-ink-2: #b7c0c5;
+  --ac-muted: #93a0a8;
+
+  --ac-bar: #0a0d0f;
+  --ac-bar-ink: #b4b4b4;
+
+  --ac-ok: #4fbf6a;
+  --ac-warn: #e0a640;
+  --ac-ko: #e07a6e;
+
+  --ac-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -14px rgba(0, 0, 0, 0.6);
+  --ac-shadow-lg: 0 2px 4px rgba(0, 0, 0, 0.35), 0 26px 60px -18px rgba(0, 0, 0, 0.7);
+}
+
+html[data-theme="dark"] .ac-brand img {
+  /* Le logo est un SVG a fond transparent dont un carre est noir : il
+     disparaitrait sur l'aplat sombre. Une pastille blanche garde le cyan de
+     la marque exact, ce qu'un filtre d'inversion ne ferait pas. */
+  background: #ffffff;
+  padding: 4px 9px;
+  border-radius: var(--ac-radius-sm);
+}
+
+html[data-theme="dark"] .ac-card--contact {
+  border-left-color: var(--ac-accent);
+}
+
+/* ---------- Responsive ---------- */
+
+@media (min-width: 1100px) {
+  .ac-stage {
+    grid-template-columns: minmax(0, 1fr) 360px;
+  }
+
+  /* Pas de defilement propre : le panneau est dimensionne pour tenir a
+     l'ecran, et s'il deborde un jour (ecran bas, longue reponse), c'est la
+     page qui defile, avec son ascenseur a elle. */
+  .ac-panel {
+    position: sticky;
+    top: var(--ac-top-height);
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    align-self: start;
+    padding: 24px 0 28px;
+  }
+}
+
+@media (max-width: 960px) {
+  .ac-nav {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .ac-top {
+    gap: 12px;
+    padding: 0 12px 0 16px;
+  }
+
+  .ac-brand img {
+    height: 38px;
+  }
+
+  .ac-topcap {
+    height: 48px;
+    padding-left: 10px;
+  }
+
+  .ac-status {
+    margin-right: 4px;
+    padding-right: 10px;
+  }
+
+  /* Sur mobile, le point suffit : le libelle prendrait la place du logo. */
+  .ac-status span {
+    display: none;
+  }
+
+  .ac-lang button {
+    padding: 0 6px;
+    font-size: 0.66rem;
+  }
+
+  .ac-stage {
+    padding: 0 16px;
+  }
+
+  .ac-hero {
+    margin-bottom: 24px;
+  }
+
+  .ac-suggestions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .ac-composer {
+    padding-left: 14px;
+  }
+
+  .ac-export-menu {
+    min-width: 240px;
+  }
+
+  .ac-msg-bubble {
+    padding: 16px 18px;
+    font-size: 1.02rem;
+  }
+
+  .ac-msg--user .ac-msg-body {
+    max-width: 92%;
+  }
+
+  .ac-msg-actions {
+    margin-left: 0;
+  }
+
+  .ac-error {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,6 @@
+# Fins de ligne LF dans le depot et a l'extraction : les Dockerfiles, les
+# scripts et les fichiers de configuration partent sur des conteneurs Linux.
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.svg text
